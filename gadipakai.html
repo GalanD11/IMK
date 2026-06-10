@@ -3057,7 +3057,7 @@ function openAlert() { closeModal(); document.getElementById('alertDlg').classLi
 function closeAlert() { document.getElementById('alertDlg').classList.remove('open'); }
 function submitTugas() {
   closeAlert();
-  showSnack('🎉 Tugas berhasil dikumpulkan! Konfirmasi dikirim ke email institusi kamu.', 'success');
+  showSnack('Tugas berhasil dikumpulkan! Konfirmasi dikirim ke email institusi kamu.', 'success');
   removeFile();
   const pending = document.querySelector('.tugas-card[data-status="pending"]');
   if (pending) {
@@ -3607,13 +3607,11 @@ async function togglePrejoinCam() {
 }
 
 function joinMeet() {
-  // ✅ FIX UTAMA: Stop semua stream dulu sebelum Jitsi load
-  // supaya kamera tidak rebutan akses dengan Jitsi
   stopPrejoinStream();
   prejoinCamOn = false;
 
   meetMicOn = prejoinMicOn;
-  meetCamOn = false; // biarkan Jitsi yang handle kamera dari awal
+  meetCamOn = false;
 
   document.getElementById('meetPrejoin').style.display = 'none';
   document.getElementById('meetRoom').style.display    = 'flex';
@@ -3623,7 +3621,7 @@ function joinMeet() {
   const container = document.getElementById('jitsiContainer');
   container.innerHTML = '';
 
-  // ✅ Simpan ke variabel global jitsiApi
+  // Simpan ke variabel global jitsiApi
   jitsiApi = new JitsiMeetExternalAPI('meet.jit.si', {
     roomName: 'ClassroomKelompok6-' + roomName,
     parentNode: container,
@@ -3634,16 +3632,15 @@ function joinMeet() {
     },
     configOverwrite: {
       startWithAudioMuted: !meetMicOn,
-      startWithVideoMuted: true, // ✅ selalu mulai dengan kamera mati, biarkan user toggle sendiri
+      startWithVideoMuted: true,
       prejoinPageEnabled: false,
     },
     interfaceConfigOverwrite: {
-      TOOLBAR_BUTTONS: [], // ✅ sembunyikan toolbar Jitsi, pakai tombol custom kita
+      TOOLBAR_BUTTONS: [],
       SHOW_JITSI_WATERMARK: false,
     },
   });
 
-  // ✅ Sinkron state tombol custom kita dengan state Jitsi yang sebenarnya
   jitsiApi.addEventListener('audioMuteStatusChanged', ({ muted }) => {
     meetMicOn = !muted;
     applyMeetMic(meetMicOn);
@@ -3680,7 +3677,6 @@ function joinMeet() {
 }
 
 function toggleMeetMic() {
-  // ✅ Pakai Jitsi API langsung, bukan getUserMedia manual
   if (jitsiApi) {
     jitsiApi.executeCommand('toggleAudio');
     // state akan diupdate otomatis lewat event audioMuteStatusChanged
@@ -3692,7 +3688,6 @@ function toggleMeetMic() {
 }
 
 function toggleMeetCam() {
-  // ✅ Pakai Jitsi API langsung, bukan getUserMedia manual
   if (jitsiApi) {
     jitsiApi.executeCommand('toggleVideo');
     // state akan diupdate otomatis lewat event videoMuteStatusChanged
@@ -4721,10 +4716,10 @@ document.querySelectorAll('.nilai-feedback').forEach(el => {
       'Above class average. Keep it up!',
     'Above class average. Keep it up!':
       'Di atas rata-rata kelas. Pertahankan!',
-    'Nilai terbaik! Kerja keras terbayar 🎉':
-      'Best score! Hard work paid off 🎉',
-    'Best score! Hard work paid off 🎉':
-      'Nilai terbaik! Kerja keras terbayar 🎉',
+    'Nilai terbaik! Kerja keras terbayar':
+      'Best score! Hard work paid off',
+    'Best score! Hard work paid off':
+      'Nilai terbaik! Kerja keras terbayar',
   };
   const textNode = el.childNodes[el.childNodes.length - 1];
   if (textNode) {
